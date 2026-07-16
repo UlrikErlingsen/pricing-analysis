@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
+  <title id="title">PriceSignal — what price range is supported?</title>
+  <desc id="desc">PriceSignal wordmark with bounded demand and contribution curves.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173C3A"/><stop offset="1" stop-color="#102C2A"/></linearGradient>
+    <clipPath id="clip"><rect width="1600" height="520" rx="34"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect width="1600" height="520" fill="url(#bg)"/>
+    <circle cx="1455" cy="25" r="305" fill="none" stroke="#F2C66D" stroke-opacity=".13" stroke-width="78"/>
+    <circle cx="78" cy="525" r="250" fill="none" stroke="#83D2B4" stroke-opacity=".10" stroke-width="65"/>
+    <g transform="translate(104 100)">
+      <rect width="116" height="116" rx="28" fill="#F8F5ED"/>
+      <path d="M25 87V30h65" fill="none" stroke="#173C3A" stroke-width="9" stroke-linecap="round"/>
+      <path d="M31 77l17-18 17 9 24-31" fill="none" stroke="#F2C66D" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="89" cy="37" r="9" fill="#D95B40"/>
+    </g>
+    <text x="104" y="300" fill="#F8F5ED" font-family="Inter,Arial,sans-serif" font-size="102" font-weight="800" letter-spacing="-5">Price<tspan fill="#F2C66D">Signal</tspan></text>
+    <text x="110" y="368" fill="#BFD2CC" font-family="Inter,Arial,sans-serif" font-size="31" font-weight="600">WHAT PRICE RANGE IS SUPPORTED — AND HOW DOES PROFIT MOVE?</text>
+    <g transform="translate(1070 130)">
+      <path d="M0 245H405M0 0v245" fill="none" stroke="#F8F5ED" stroke-opacity=".34" stroke-width="3"/>
+      <path d="M18 47C115 80 195 143 382 210" fill="none" stroke="#83D2B4" stroke-width="10" stroke-linecap="round"/>
+      <path d="M18 221C112 205 190 67 272 70c48 2 78 52 110 118" fill="none" stroke="#D95B40" stroke-width="10" stroke-linecap="round"/>
+      <path d="M239 16v229" stroke="#F2C66D" stroke-width="4" stroke-dasharray="9 9"/>
+      <circle cx="239" cy="78" r="11" fill="#F2C66D"/>
+      <text x="216" y="278" fill="#F2C66D" font-family="Inter,Arial,sans-serif" font-size="21" font-weight="700">CANDIDATE</text>
+    </g>
+  </g>
+</svg>
