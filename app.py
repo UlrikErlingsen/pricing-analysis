@@ -6,6 +6,7 @@ os.environ.setdefault("ARROW_DEFAULT_MEMORY_POOL", "system")
 
 import base64
 import hashlib
+import html
 import inspect
 from pathlib import Path
 import sys
@@ -61,6 +62,11 @@ CAUTION = (
     "**PriceSignal bounds a pricing scenario; it does not turn a model into market truth.** Historical coefficients can "
     "be confounded, assigned-price tests support only their tested range, and WTP is not the same as realized demand. "
     "Contribution uses the cost and planning scale you declare."
+)
+NAME_STATUS = (
+    "**WORKING NAME — LOCAL/PRIVATE ONLY.** An exact active PriceSignal product was found in competitor-price "
+    "tracking. This build is not cleared for public release and must be renamed before it is published or promoted. "
+    "See `docs/name-screen.md` for the dated screen and limits."
 )
 mark_path = ROOT / "assets" / "pricesignal-mark.svg"
 MARK_URI = (
@@ -192,8 +198,8 @@ def masthead() -> None:
 
 def footer() -> None:
     st.markdown(
-        f'<div class="ps-footer">PriceSignal {__version__} <span>◆</span> local-first <span>◆</span> '
-        "open methods <span>◆</span> accountable pricing decisions</div>",
+        f'<div class="ps-footer">PriceSignal v{__version__} <span>◆</span> scenario bounds, not market truth '
+        "<span>◆</span> Part of the Signal suite <span>◆</span> AGPL-3.0-or-later</div>",
         unsafe_allow_html=True,
     )
 
@@ -484,8 +490,8 @@ def render_decision() -> None:
     )
     st.markdown(
         f"""<div class="ps-note"><b>Decision contract:</b> compare {config.candidate_price:,.2f} with
-        {config.reference_price:,.2f} {config.currency}; require at least
-        {config.minimum_worthwhile_contribution:,.0f} {config.currency} incremental contribution. The candidate
+        {config.reference_price:,.2f} {html.escape(config.currency)}; require at least
+        {config.minimum_worthwhile_contribution:,.0f} {html.escape(config.currency)} incremental contribution. The candidate
         {'is' if comparison['within_observed_support'] else 'is not'} inside observed support.</div>""",
         unsafe_allow_html=True,
     )
@@ -589,6 +595,7 @@ with st.sidebar:
 
 
 masthead()
+st.warning(NAME_STATUS, icon="⚠️")
 renderers = {
     "Welcome": render_welcome,
     "1 · Evidence contract": render_contract,

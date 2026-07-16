@@ -78,9 +78,19 @@ def read_table(raw: bytes, filename: str) -> tuple[pd.DataFrame, dict[str, str]]
     }
 
 
+_ILLEGAL_XML = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+
+
+def _scrub_control(value: str) -> str:
+    return _ILLEGAL_XML.sub("", value)
+
+
 def _safe_cell(value: object) -> object:
-    if isinstance(value, str) and value.lstrip().startswith(("=", "+", "-", "@")):
-        return "'" + value
+    if isinstance(value, str):
+        cleaned = _scrub_control(value)
+        if cleaned.lstrip().startswith(("=", "+", "-", "@")):
+            return "'" + cleaned
+        return cleaned
     return value
 
 
@@ -88,6 +98,7 @@ def safe_frame(frame: pd.DataFrame) -> pd.DataFrame:
     result = frame.copy()
     for column in result.select_dtypes(include=["object", "string"]).columns:
         result[column] = result[column].map(_safe_cell)
+    result.columns = [_safe_cell(_scrub_control(str(column))) for column in result.columns]
     return result
 
 

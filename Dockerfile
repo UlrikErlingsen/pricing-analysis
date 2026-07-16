@@ -9,7 +9,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-RUN useradd --create-home --uid 10001 pricesignal && chown -R pricesignal:pricesignal /app
+RUN useradd --create-home --uid 10001 pricesignal
 USER pricesignal
 
 EXPOSE 8588

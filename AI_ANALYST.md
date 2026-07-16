@@ -1,6 +1,6 @@
 # PriceSignal AI Analyst — run this analysis with any AI, no install needed
 
-> Part of [PriceSignal](https://github.com/UlrikErlingsen/pricing-analysis), a free open-source app that runs this same analysis with a point-and-click interface on your computer. This file is the no-install alternative: give it to an AI assistant and it becomes the analyst.
+> Part of the local PriceSignal working build, a free open-source app that runs this same analysis with a point-and-click interface on your computer. The working name is not cleared for public release; see `docs/name-screen.md`. This file is the no-install alternative: give it to an AI assistant and it becomes the analyst.
 
 ## How to use this file (2 minutes)
 

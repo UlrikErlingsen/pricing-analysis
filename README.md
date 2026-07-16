@@ -3,13 +3,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/UlrikErlingsen/pricing-analysis/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/UlrikErlingsen/pricing-analysis/actions/workflows/tests.yml/badge.svg"></a>
+  <img alt="Status: local working title" src="https://img.shields.io/badge/Status-local%20working%20title-F2C66D">
   <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-173C3A?logo=python&logoColor=white">
   <img alt="Streamlit" src="https://img.shields.io/badge/Streamlit-app-D95B40?logo=streamlit&logoColor=white">
   <a href="LICENSE"><img alt="License: AGPL-3.0-or-later" src="https://img.shields.io/badge/License-AGPL--3.0--or--later-36534E"></a>
 </p>
 
 <p align="center"><strong>Open pricing evidence — bound the price range, preserve uncertainty, and keep the evidence tier beside the economics.</strong></p>
+
+> **Working-name status — local/private only:** an exact active **PriceSignal** product operates in competitor-price tracking, the same commercial neighborhood as this tool. This build is not cleared for public release and must be renamed before it is published, hosted, packaged, or promoted. See the dated [name screen](docs/name-screen.md).
 
 **PriceSignal** helps analysts, product teams, and marketers compare a declared candidate price with a reference price. It accepts one of three evidence routes—an assigned-price experiment, a historical price–quantity series, or respondent-level willingness to pay—and keeps their interpretations separate. Every route feeds the same transparent economic layer: projected volume multiplied by declared unit margin.
 
@@ -144,14 +146,16 @@ python -m build
 
 Fixtures cover known elasticity recovery, randomized arm behavior, empirical WTP demand, decision boundaries, deterministic examples, safe imports and exports, and every Streamlit page.
 
-## Relationship to the Signal tools
+## Relationship to the Signal suite
 
-- **WorthSignal** supplies customer and contribution economics that can improve pricing scenarios.
-- **SegmentSignal** can reveal stable groups for separately designed pricing studies; PriceSignal does not search for exploitable personal prices.
-- **ChoiceSignal** estimates attribute utilities. WTP conversion remains outside its first release; PriceSignal accepts direct valuation or price-response evidence instead of silently converting weak price coefficients.
-- **ExperimentSignal** is the general randomized-experiment engine. PriceSignal adds pricing-specific demand and contribution logic while retaining strict randomization caveats.
-- **AllocSignal** allocates marketing budgets, not product prices.
-- **GateSignal** can consume the aggregate PriceSignal bridge as one bounded launch input.
+- **[WorthSignal](https://github.com/UlrikErlingsen/customer-value-analytics)** supplies customer and contribution economics that can improve pricing scenarios.
+- **[SegmentSignal](https://github.com/UlrikErlingsen/customer-segmentation)** can reveal stable groups for separately designed pricing studies; PriceSignal does not search for exploitable personal prices.
+- **[ChoiceSignal](https://github.com/UlrikErlingsen/conjoint-analysis)** estimates attribute utilities. WTP conversion remains outside its first release; PriceSignal accepts direct valuation or price-response evidence instead of silently converting weak price coefficients.
+- **[ExperimentSignal](https://github.com/UlrikErlingsen/experiment-analysis)** is the general randomized-experiment engine. PriceSignal adds pricing-specific demand and contribution logic while retaining strict randomization caveats.
+- **[AllocSignal](https://github.com/UlrikErlingsen/marketing-mix-allocation)** allocates marketing budgets, not product prices.
+- **[GateSignal](https://github.com/UlrikErlingsen/launch-decision-gate)** can consume the aggregate PriceSignal bridge as one bounded launch input.
+
+The maintained public suite is listed at [ulrikerlingsen.com](https://ulrikerlingsen.com). This working build is deliberately excluded until it has a cleared replacement name.
 
 ## Method references
 
@@ -168,4 +172,3 @@ Fixtures cover known elasticity recovery, randomized arm behavior, empirical WTP
 PriceSignal is an independent implementation based on public pricing, experimental, econometric, and valuation literature. It does not reproduce lecture slides, classroom cases, assessment material, teaching diagrams, proprietary pricing templates, or institution-specific wording. All bundled examples and interface copy were created for this project. See [sources and originality](docs/sources-and-originality.md).
 
 The software and documentation are free under **AGPL-3.0-or-later**. This application was developed with AI coding assistance and checked through source review, analytical fixtures, deterministic synthetic recovery, automated app tests, and visual inspection. Verify material pricing decisions independently; no warranty is provided.
-
