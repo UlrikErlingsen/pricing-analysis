@@ -1,6 +1,6 @@
 # Data guide
 
-PriceSignal accepts CSV, XLSX, or JSON. A JSON file must be an array of row objects or an object with a `data` array. The first Excel worksheet is read. The local upload limit is 50 MB, 250,000 rows, and 500 columns.
+TagSignal accepts CSV, XLSX, or JSON. A JSON file must be an array of row objects or an object with a `data` array. The first Excel worksheet is read. The local upload limit is 50 MB, 250,000 rows, and 500 columns.
 
 ## Shared rules
 
@@ -25,7 +25,7 @@ Required columns are positive price and positive quantity. Optional controls mus
 
 This release requires at least 24 complete rows and six distinct prices. Rows should share a stable quantity definition and time interval. The planning multiplier defaults to one because historical quantity is normally already expressed per planning period.
 
-Ordering the rows chronologically matters when HAC uncertainty is used. PriceSignal does not parse or sort a period label; prepare the file in the intended order before upload.
+Ordering the rows chronologically matters when HAC uncertainty is used. TagSignal does not parse or sort a period label; prepare the file in the intended order before upload.
 
 ## Respondent-level WTP
 
@@ -41,5 +41,5 @@ Choose **Incentive-compatible BDM or auction** only when the implemented protoco
 - **Reference price:** the current, control, or otherwise defensible comparison price.
 - **Candidate price:** the price written into the decision contract before reading the result.
 - **Planning multiplier / opportunities:** converts the modeled outcome into projected volume.
-- **Minimum worthwhile contribution:** the smallest total incremental contribution that would justify acting, before implementation costs and omitted risks. It must be above zero; PriceSignal refuses a zero threshold because it would turn the decision reading into a bare significance statement.
+- **Minimum worthwhile contribution:** the smallest total incremental contribution that would justify acting, before implementation costs and omitted risks. It must be above zero; TagSignal refuses a zero threshold because it would turn the decision reading into a bare significance statement.
 

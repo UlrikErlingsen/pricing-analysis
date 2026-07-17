@@ -4,7 +4,7 @@ cd /d "%~dp0"
 
 where py >nul 2>nul
 if errorlevel 1 (
-  echo PriceSignal needs Python 3.10 or newer.
+  echo TagSignal needs Python 3.10 or newer.
   pause
   exit /b 1
 )

@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/pricesignal-banner.svg" alt="PriceSignal — what price range is supported, and how does profit move?" width="100%">
+  <img src="assets/tagsignal-banner.svg" alt="TagSignal — what price range is supported, and how does profit move?" width="100%">
 </p>
 
 <p align="center">
-  <img alt="Status: local working title" src="https://img.shields.io/badge/Status-local%20working%20title-F2C66D">
+  <a href="https://github.com/UlrikErlingsen/pricing-analysis/actions/workflows/tests.yml"><img alt="Tests" src="https://github.com/UlrikErlingsen/pricing-analysis/actions/workflows/tests.yml/badge.svg"></a>
   <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-173C3A?logo=python&logoColor=white">
   <img alt="Streamlit" src="https://img.shields.io/badge/Streamlit-app-D95B40?logo=streamlit&logoColor=white">
   <a href="LICENSE"><img alt="License: AGPL-3.0-or-later" src="https://img.shields.io/badge/License-AGPL--3.0--or--later-36534E"></a>
@@ -11,35 +11,35 @@
 
 <p align="center"><strong>Open pricing evidence — bound the price range, preserve uncertainty, and keep the evidence tier beside the economics.</strong></p>
 
-> **Working-name status — local/private only:** an exact active **PriceSignal** product operates in competitor-price tracking, the same commercial neighborhood as this tool. This build is not cleared for public release and must be renamed before it is published, hosted, packaged, or promoted. See the dated [name screen](docs/name-screen.md).
+> **Working-name status:** a basic screen on 17 July 2026 found no obvious exact active software product called “TagSignal.” That is encouraging, but it is not trademark clearance. Keep the label provisional until official registers, company names, domains, package registries, app stores, and relevant jurisdictions have been professionally checked. See [the name screen](docs/name-screen.md).
 
-**PriceSignal** helps analysts, product teams, and marketers compare a declared candidate price with a reference price. It accepts one of three evidence routes—an assigned-price experiment, a historical price–quantity series, or respondent-level willingness to pay—and keeps their interpretations separate. Every route feeds the same transparent economic layer: projected volume multiplied by declared unit margin.
+**TagSignal** helps analysts, product teams, and marketers compare a declared candidate price with a reference price. It accepts one of three evidence routes—an assigned-price experiment, a historical price–quantity series, or respondent-level willingness to pay—and keeps their interpretations separate. Every route feeds the same transparent economic layer: projected volume multiplied by declared unit margin.
 
 Everything runs locally with open-source Python packages. There is no account, telemetry, external AI call, remote database, or built-in persistence.
 
 ## Read this first
 
-> **PriceSignal bounds a pricing scenario; it does not turn a model into market truth.** Historical coefficients can be confounded, randomized tests support their tested prices and implementation, and WTP is not realized demand. Unit cost, addressable demand, competition, capacity, fairness, and execution still require accountable human judgment.
+> **TagSignal bounds a pricing scenario; it does not turn a model into market truth.** Historical coefficients can be confounded, randomized tests support their tested prices and implementation, and WTP is not realized demand. Unit cost, addressable demand, competition, capacity, fairness, and execution still require accountable human judgment.
 
-PriceSignal does not select a price because a p-value crossed a threshold. Before analysis, the contract records a reference price, candidate price, unit cost, planning scale, and a minimum worthwhile incremental contribution that must be above zero — with a zero threshold, the reading would collapse into a bare significance statement, which PriceSignal refuses to present as a decision. The resulting interval is compared with that business threshold.
+TagSignal does not select a price because a p-value crossed a threshold. Before analysis, the contract records a reference price, candidate price, unit cost, planning scale, and a minimum worthwhile incremental contribution that must be above zero — with a zero threshold, the reading would collapse into a bare significance statement, which TagSignal refuses to present as a decision. The resulting interval is compared with that business threshold.
 
 ## Supported evidence routes
 
 ### Randomized assigned-price test
 
-Use one row per assigned unit with a positive assigned price and a non-negative purchase or quantity outcome. PriceSignal summarizes each arm, fits a power curve to arm means, and uses a stratified within-arm bootstrap for uncertainty. Binary purchase outcomes are supported.
+Use one row per assigned unit with a positive assigned price and a non-negative purchase or quantity outcome. TagSignal summarizes each arm, fits a power curve to arm means, and uses a stratified within-arm bootstrap for uncertainty. Binary purchase outcomes are supported.
 
 A causal reading still requires a valid assignment process, assignment before outcome, acceptable outcome observation, faithful price delivery, limited interference, and a population matching the intended decision. The smooth curve between assigned prices is a functional-form assumption.
 
 ### Historical price–quantity series
 
-Use one row per period with positive price and quantity plus optional numeric controls. PriceSignal fits a log–log model and reports the price coefficient as a constant-elasticity association. Newey–West HAC or HC3 covariance is available; a smearing factor retransforms log predictions.
+Use one row per period with positive price and quantity plus optional numeric controls. TagSignal fits a log–log model and reports the price coefficient as a constant-elasticity association. Newey–West HAC or HC3 covariance is available; a smearing factor retransforms log predictions.
 
 Neither robust covariance estimator solves endogenous pricing, omitted promotions, seasonality, competitor action, stock-outs, distribution changes, or simultaneous demand shocks. This route is always labeled **ASSOCIATION ONLY**.
 
 ### Respondent-level willingness to pay
 
-Use one row per respondent with a positive maximum WTP. At each price, PriceSignal calculates the empirical share with WTP at or above that price and bootstraps respondents.
+Use one row per respondent with a positive maximum WTP. At each price, TagSignal calculates the empirical share with WTP at or above that price and bootstraps respondents.
 
 Stated WTP is labeled **STATED VALUATION**. An appropriately implemented BDM or auction protocol may be labeled **INCENTIVE-COMPATIBLE VALUATION**, but even that is not a complete market-demand estimate.
 
@@ -122,13 +122,13 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-The macOS launcher prefers local port `8588` and falls back to a free port between 8501 and 8599; it accepts the `PRICESIGNAL_PORT`, `PRICESIGNAL_MAX_UPLOAD_MB`, and `PRICESIGNAL_NO_BROWSER` environment variables. The Windows launcher always uses port `8588`. Setting `PRICESIGNAL_DEBUG=1` shows technical error details inside the app on any platform.
+The macOS launcher prefers local port `8588` and falls back to a free port between 8501 and 8599; it accepts the `TAGSIGNAL_PORT`, `TAGSIGNAL_MAX_UPLOAD_MB`, and `TAGSIGNAL_NO_BROWSER` environment variables. The Windows launcher always uses port `8588`. Setting `TAGSIGNAL_DEBUG=1` shows technical error details inside the app on any platform.
 
 ### Docker
 
 ```bash
-docker build -t pricesignal .
-docker run --rm -p 8588:8588 pricesignal
+docker build -t tagsignal .
+docker run --rm -p 8588:8588 tagsignal
 ```
 
 ## No install? Give this file to an AI
@@ -149,13 +149,13 @@ Fixtures cover known elasticity recovery, randomized arm behavior, empirical WTP
 ## Relationship to the Signal suite
 
 - **[WorthSignal](https://github.com/UlrikErlingsen/customer-value-analytics)** supplies customer and contribution economics that can improve pricing scenarios.
-- **[SegmentSignal](https://github.com/UlrikErlingsen/customer-segmentation)** can reveal stable groups for separately designed pricing studies; PriceSignal does not search for exploitable personal prices.
-- **[ChoiceSignal](https://github.com/UlrikErlingsen/conjoint-analysis)** estimates attribute utilities. WTP conversion remains outside its first release; PriceSignal accepts direct valuation or price-response evidence instead of silently converting weak price coefficients.
-- **[ExperimentSignal](https://github.com/UlrikErlingsen/experiment-analysis)** is the general randomized-experiment engine. PriceSignal adds pricing-specific demand and contribution logic while retaining strict randomization caveats.
+- **[SegmentSignal](https://github.com/UlrikErlingsen/customer-segmentation)** can reveal stable groups for separately designed pricing studies; TagSignal does not search for exploitable personal prices.
+- **[ChoiceSignal](https://github.com/UlrikErlingsen/conjoint-analysis)** estimates attribute utilities. WTP conversion remains outside its first release; TagSignal accepts direct valuation or price-response evidence instead of silently converting weak price coefficients.
+- **[ExperimentSignal](https://github.com/UlrikErlingsen/experiment-analysis)** is the general randomized-experiment engine. TagSignal adds pricing-specific demand and contribution logic while retaining strict randomization caveats.
 - **[AllocSignal](https://github.com/UlrikErlingsen/marketing-mix-allocation)** allocates marketing budgets, not product prices.
-- **[GateSignal](https://github.com/UlrikErlingsen/launch-decision-gate)** can consume the aggregate PriceSignal bridge as one bounded launch input.
+- **[GateSignal](https://github.com/UlrikErlingsen/launch-decision-gate)** can consume the aggregate TagSignal bridge as one bounded launch input.
 
-The maintained public suite is listed at [ulrikerlingsen.com](https://ulrikerlingsen.com). This working build is deliberately excluded until it has a cleared replacement name.
+TagSignal shares the suite’s local-first, named-method, fictional-demo, portable-evidence, and explicit-boundary standard. The portfolio overview is at [ulrikerlingsen.com](https://ulrikerlingsen.com).
 
 ## Method references
 
@@ -169,6 +169,6 @@ The maintained public suite is listed at [ulrikerlingsen.com](https://ulrikerlin
 
 ## Originality and license
 
-PriceSignal is an independent implementation based on public pricing, experimental, econometric, and valuation literature. It does not reproduce lecture slides, classroom cases, assessment material, teaching diagrams, proprietary pricing templates, or institution-specific wording. All bundled examples and interface copy were created for this project. See [sources and originality](docs/sources-and-originality.md).
+TagSignal is an independent implementation based on public pricing, experimental, econometric, and valuation literature. It does not reproduce lecture slides, classroom cases, assessment material, teaching diagrams, proprietary pricing templates, or institution-specific wording. All bundled examples and interface copy were created for this project. See [sources and originality](docs/sources-and-originality.md).
 
 The software and documentation are free under **AGPL-3.0-or-later**. This application was developed with AI coding assistance and checked through source review, analytical fixtures, deterministic synthetic recovery, automated app tests, and visual inspection. Verify material pricing decisions independently; no warranty is provided.

@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pricesignal.analysis import PriceConfig, analyze_price, audit_price_data, classify_decision
-from pricesignal.errors import DataProblem
-from pricesignal.examples import demo_contract, historical_demo, randomized_demo, valuation_demo
+from tagsignal.analysis import PriceConfig, analyze_price, audit_price_data, classify_decision
+from tagsignal.errors import DataProblem
+from tagsignal.examples import demo_contract, historical_demo, randomized_demo, valuation_demo
 
 
 def config(mode: str, **overrides) -> PriceConfig:

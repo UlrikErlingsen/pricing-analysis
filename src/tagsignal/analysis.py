@@ -16,7 +16,7 @@ SUPPORTED_MODES = {"historical", "randomized", "valuation"}
 
 ZERO_THRESHOLD_REFUSAL = (
     "Set the minimum worthwhile incremental contribution above zero — with zero, the reading collapses into a "
-    "bare significance statement, which PriceSignal refuses to present as a decision."
+    "bare significance statement, which TagSignal refuses to present as a decision."
 )
 
 

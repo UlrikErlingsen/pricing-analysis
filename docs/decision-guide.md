@@ -1,6 +1,6 @@
 # Decision guide
 
-PriceSignal compares a declared candidate price with a reference price. It does not automatically adopt the price with the largest point estimate.
+TagSignal compares a declared candidate price with a reference price. It does not automatically adopt the price with the largest point estimate.
 
 ## Read in this order
 
@@ -29,5 +29,5 @@ If the highest modeled contribution is at the minimum or maximum supported price
 
 ## Responsible pricing
 
-PriceSignal is not a personalized dynamic-pricing engine. Do not use protected characteristics or proxies to set individual prices. Review consumer-protection, disclosure, competition, discrimination, contract, and sector-specific requirements with qualified experts. A numerically profitable price can still be unfair, illegal, strategically destructive, or inconsistent with the brand.
+TagSignal is not a personalized dynamic-pricing engine. Do not use protected characteristics or proxies to set individual prices. Review consumer-protection, disclosure, competition, discrimination, contract, and sector-specific requirements with qualified experts. A numerically profitable price can still be unfair, illegal, strategically destructive, or inconsistent with the brand.
 

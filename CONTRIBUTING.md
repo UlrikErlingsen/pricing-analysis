@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for improving PriceSignal.
+Thank you for improving TagSignal.
 
 1. Open an issue describing the pricing decision, evidence route, and proposed behavior.
 2. Keep the interface decision-first and the evidence tier visible.

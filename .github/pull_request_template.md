@@ -4,7 +4,6 @@ Describe the pricing-evidence problem this local change addresses.
 
 ## Boundaries checked
 
-- [ ] The PriceSignal label remains local/private and is not published.
 - [ ] Randomized, historical, and valuation evidence tiers remain separate.
 - [ ] Historical elasticity remains explicitly associational.
 - [ ] Pricing scenarios are not presented as market truth or automatic approvals.

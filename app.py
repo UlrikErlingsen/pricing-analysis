@@ -21,11 +21,11 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from pricesignal import __version__
-from pricesignal.analysis import PriceConfig, analyze_price, audit_price_data
-from pricesignal.errors import DataProblem, friendly_message
-from pricesignal.examples import demo_contract, historical_demo, randomized_demo, starter_template, valuation_demo
-from pricesignal.io import (
+from tagsignal import __version__
+from tagsignal.analysis import PriceConfig, analyze_price, audit_price_data
+from tagsignal.errors import DataProblem, friendly_message
+from tagsignal.examples import demo_contract, historical_demo, randomized_demo, starter_template, valuation_demo
+from tagsignal.io import (
     build_evidence_pack,
     build_gate_bridge,
     dataframe_to_xlsx,
@@ -59,16 +59,11 @@ COLORS = {
     "muted": "#59716C",
 }
 CAUTION = (
-    "**PriceSignal bounds a pricing scenario; it does not turn a model into market truth.** Historical coefficients can "
+    "**TagSignal bounds a pricing scenario; it does not turn a model into market truth.** Historical coefficients can "
     "be confounded, assigned-price tests support only their tested range, and WTP is not the same as realized demand. "
     "Contribution uses the cost and planning scale you declare."
 )
-NAME_STATUS = (
-    "**WORKING NAME — LOCAL/PRIVATE ONLY.** An exact active PriceSignal product was found in competitor-price "
-    "tracking. This build is not cleared for public release and must be renamed before it is published or promoted. "
-    "See `docs/name-screen.md` for the dated screen and limits."
-)
-mark_path = ROOT / "assets" / "pricesignal-mark.svg"
+mark_path = ROOT / "assets" / "tagsignal-mark.svg"
 MARK_URI = (
     "data:image/svg+xml;base64," + base64.b64encode(mark_path.read_bytes()).decode("ascii")
     if mark_path.exists()
@@ -89,7 +84,7 @@ def full_width(widget, *args, **kwargs):
     return widget(*args, **kwargs)
 
 
-st.set_page_config(page_title="PriceSignal | Pricing evidence", page_icon="◇", layout="wide")
+st.set_page_config(page_title="TagSignal | Pricing evidence", page_icon="◇", layout="wide")
 st.markdown(
     """
     <style>
@@ -133,7 +128,7 @@ st.markdown(
 
 def show_error(exc: Exception) -> None:
     st.error(friendly_message(exc))
-    if not isinstance(exc, (DataProblem, ValueError)) and os.getenv("PRICESIGNAL_DEBUG") == "1":
+    if not isinstance(exc, (DataProblem, ValueError)) and os.getenv("TAGSIGNAL_DEBUG") == "1":
         with st.expander("Technical details"):
             st.code("".join(traceback.format_exception(exc)))
 
@@ -146,15 +141,15 @@ def reset_results() -> None:
 def load_demo(mode: str) -> None:
     frames = {"randomized": randomized_demo, "historical": historical_demo, "valuation": valuation_demo}
     names = {
-        "randomized": "pricesignal-fictional-randomized-demo.csv",
-        "historical": "pricesignal-fictional-historical-demo.csv",
-        "valuation": "pricesignal-fictional-valuation-demo.csv",
+        "randomized": "tagsignal-fictional-randomized-demo.csv",
+        "historical": "tagsignal-fictional-historical-demo.csv",
+        "valuation": "tagsignal-fictional-valuation-demo.csv",
     }
     st.session_state["data"] = frames[mode]()
     st.session_state["source"] = {
         "source_filename": names[mode],
         "source_sheet": "",
-        "source_sha256": hashlib.sha256(f"pricesignal-{mode}-fictional-v1".encode()).hexdigest(),
+        "source_sha256": hashlib.sha256(f"tagsignal-{mode}-fictional-v1".encode()).hexdigest(),
         "source_type": "deterministic synthetic demonstration",
     }
     st.session_state["contract"] = demo_contract(mode)
@@ -189,7 +184,7 @@ def config_from_contract(contract: dict[str, object]) -> PriceConfig:
 def masthead() -> None:
     mark = f'<img class="ps-mark" src="{MARK_URI}" alt="">' if MARK_URI else ""
     st.markdown(
-        f"""<div class="ps-masthead"><div class="ps-lockup">{mark}<div><div class="ps-wordmark">Price<span>Signal</span></div>
+        f"""<div class="ps-masthead"><div class="ps-lockup">{mark}<div><div class="ps-wordmark">Tag<span>Signal</span></div>
         <div class="ps-kicker">EVIDENCE → RESPONSE → ECONOMICS</div></div></div>
         <div class="ps-promise">Bound the range <span>◆</span> Preserve uncertainty <span>◆</span> Name the evidence</div></div>""",
         unsafe_allow_html=True,
@@ -198,7 +193,7 @@ def masthead() -> None:
 
 def footer() -> None:
     st.markdown(
-        f'<div class="ps-footer">PriceSignal v{__version__} <span>◆</span> scenario bounds, not market truth '
+        f'<div class="ps-footer">TagSignal v{__version__} <span>◆</span> scenario bounds, not market truth '
         "<span>◆</span> Part of the Signal suite <span>◆</span> AGPL-3.0-or-later</div>",
         unsafe_allow_html=True,
     )
@@ -213,7 +208,7 @@ def render_welcome() -> None:
         """
         <section class="ps-hero"><div class="ps-eyebrow">PRICING EVIDENCE & DECISION SUPPORT</div>
         <h1>What price range is supported—and how does <em>profit move?</em></h1>
-        <p>Bring an assigned-price test, a historical price–quantity series, or respondent-level valuations. PriceSignal
+        <p>Bring an assigned-price test, a historical price–quantity series, or respondent-level valuations. TagSignal
         audits the evidence, estimates only what that design can support, and compares a declared candidate with a
         reference price using demand, margin, contribution, and uncertainty.</p>
         <div class="ps-pills"><span class="ps-pill">price elasticity</span><span class="ps-pill">stratified bootstrap</span>
@@ -263,7 +258,7 @@ def render_contract() -> None:
     if not numeric_columns:
         show_error(
             DataProblem(
-                "The loaded table has no mostly-numeric columns. PriceSignal needs numeric price and quantity "
+                "The loaded table has no mostly-numeric columns. TagSignal needs numeric price and quantity "
                 "columns, or a numeric willingness-to-pay column. Check the data guide and load a numeric table."
             )
         )
@@ -324,7 +319,7 @@ def render_contract() -> None:
             help=(
                 "The smallest total incremental contribution that would make the candidate price worth adopting. "
                 "It must be above zero — with zero, the reading collapses into a bare significance statement, "
-                "which PriceSignal refuses to present as a decision."
+                "which TagSignal refuses to present as a decision."
             ),
         )
     with c3:
@@ -502,18 +497,18 @@ def render_decision() -> None:
     st.subheader("Portable, aggregate evidence")
     d1, d2, d3, d4 = st.columns(4)
     with d1:
-        st.download_button("Evidence JSON", evidence_to_json(pack), "pricesignal-evidence.json", "application/json")
+        st.download_button("Evidence JSON", evidence_to_json(pack), "tagsignal-evidence.json", "application/json")
     with d2:
         st.download_button(
             "Evidence workbook",
             evidence_to_excel(pack),
-            "pricesignal-evidence.xlsx",
+            "tagsignal-evidence.xlsx",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         )
     with d3:
-        st.download_button("CSV evidence pack", evidence_to_csv_zip(pack), "pricesignal-evidence.zip", "application/zip")
+        st.download_button("CSV evidence pack", evidence_to_csv_zip(pack), "tagsignal-evidence.zip", "application/zip")
     with d4:
-        st.download_button("GateSignal bridge", evidence_to_json(bridge), "pricesignal-gate-bridge.json", "application/json")
+        st.download_button("GateSignal bridge", evidence_to_json(bridge), "tagsignal-gate-bridge.json", "application/json")
     st.caption("Exports exclude uploaded row-level records, identifiers, fitted values, residuals, and free text.")
 
 
@@ -536,7 +531,7 @@ def render_methods() -> None:
     st.subheader("Economic layer")
     st.markdown(
         """
-        At each supported price, PriceSignal calculates `projected volume × (price − declared unit cost)`. It then
+        At each supported price, TagSignal calculates `projected volume × (price − declared unit cost)`. It then
         compares the candidate with the reference price and classifies the interval against a declared minimum
         worthwhile contribution. Taxes, fixed costs, capacity, cannibalization, competitor response, channel margins,
         fairness, legal constraints, and long-run retention remain outside the calculation unless reflected in inputs.
@@ -555,7 +550,7 @@ def render_methods() -> None:
         """
     )
     st.info(
-        "PriceSignal is independently designed from public literature. It does not reproduce lecture slides, classroom cases, "
+        "TagSignal is independently designed from public literature. It does not reproduce lecture slides, classroom cases, "
         "exam material, proprietary pricing templates, or institution-specific wording."
     )
 
@@ -563,7 +558,7 @@ def render_methods() -> None:
 with st.sidebar:
     mark = f'<img class="ps-mark" src="{MARK_URI}" alt="">' if MARK_URI else ""
     st.markdown(
-        f'<div class="ps-lockup">{mark}<div><div class="ps-name">Price<span>Signal</span></div>'
+        f'<div class="ps-lockup">{mark}<div><div class="ps-name">Tag<span>Signal</span></div>'
         '<p class="ps-tag">Pricing evidence without false precision.</p></div></div>',
         unsafe_allow_html=True,
     )
@@ -589,13 +584,12 @@ with st.sidebar:
     st.download_button(
         "Download starter workbook",
         dataframe_to_xlsx(starter_template(mode_for_template)),
-        f"pricesignal-{mode_for_template}-template.xlsx",
+        f"tagsignal-{mode_for_template}-template.xlsx",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
 
 masthead()
-st.warning(NAME_STATUS, icon="⚠️")
 renderers = {
     "Welcome": render_welcome,
     "1 · Evidence contract": render_contract,

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from pricesignal.examples import historical_demo, randomized_demo, starter_template, valuation_demo
+from tagsignal.examples import historical_demo, randomized_demo, starter_template, valuation_demo
 
 
 def test_examples_are_deterministic_and_have_expected_shapes() -> None:

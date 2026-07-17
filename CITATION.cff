@@ -1,12 +1,12 @@
 cff-version: 1.2.0
-message: "If you use PriceSignal, please cite the software and the primary method source appropriate to your evidence route."
-title: "PriceSignal: open pricing evidence and decision support"
+message: "If you use TagSignal, please cite the software and the primary method source appropriate to your evidence route."
+title: "TagSignal: open pricing evidence and decision support"
 type: software
 authors:
   - family-names: Erlingsen
     given-names: Ulrik
-version: 1.0.1
-date-released: 2026-07-16
+version: 1.1.0
+date-released: 2026-07-17
 license: AGPL-3.0-or-later
 keywords:
   - pricing analytics

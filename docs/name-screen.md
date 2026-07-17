@@ -1,25 +1,22 @@
-# Working-name screen
+# Working-name screen: TagSignal
 
-Screen date: **16 July 2026**
+Screen date: **17 July 2026**
 
-Status: **local/private working label — do not publish, deploy, or promote under “PriceSignal.”**
+## Why the app was renamed
 
-## Material finding
+This app was previously developed under the working name **PriceSignal**. That name conflicts with [pricesignal.co](https://pricesignal.co), an active price-tracking and competitive-intelligence SaaS (priced around $249/month, active through 2025–2026) operating in the same commercial neighborhood as this tool. An exact same-category collision with an active commercial product rules out public use of that label, so the app was renamed to **TagSignal**. The interop schema key `signal.price-evidence.v1` is a stable identifier and was deliberately kept: TagSignal (formerly published briefly as PriceSignal) exports `signal.price-evidence.v1`.
 
-The exact name **PriceSignal** is already used by an active product in the same commercial neighborhood. [PriceSignal for Business](https://pricesignal.co/business.html) describes competitor price tracking, pricing intelligence, and price-elasticity support. An exact-name [Price Signal app on Google Play](https://play.google.com/store/apps/details?id=com.price_signal) also shows use in financial price alerts, a different category but further evidence that the label is crowded.
+## Result for the new name
 
-That same-category collision is enough to stop public use of this working name. The current folder, package names, export identifiers, and interface can remain local while a replacement is chosen; they should be renamed together before any repository, website card, package, hosted app, or promotional material is published.
+**TagSignal is a plausible working name, but it is not legally cleared.** An exact-string screen for “TagSignal” found no company or software product of that name. The nearest finding was “Signal Tag Management,” a tag-management SaaS — reversed word order and a different category (website tag containers versus pricing analytics). Searches also surface generic “tag systems” hardware vendors, which are unrelated in category and channel.
 
-## What this screen did—and did not—cover
+## Practical assessment
 
-This was a practical web screen, not legal clearance. It did not comprehensively search trademark registers, company registers, domains, package indexes, app stores, social handles, common-law rights, translations, or every relevant jurisdiction and product class.
+- **Direct exact-name conflict found:** none in the basic web screen.
+- **Nearest neighbor:** “Signal Tag Management” (reversed word order, different product category).
+- **Conceptual fit:** reasonable for a tool that reads the price tag’s supported range and economics.
+- **Legal confidence:** low, because no formal trademark clearance was performed.
 
-Before adopting a replacement:
+## Limits
 
-1. search exact, near, phonetic, and semantic variants across the intended markets;
-2. check software, analytics, pricing, research, and marketing-adjacent classes;
-3. confirm usable domains, repository names, package names, and social handles;
-4. document the result and obtain qualified trademark advice where the commercial risk warrants it; and
-5. repeat the screen immediately before public release.
-
-This note is project risk documentation, not legal advice.
+This was a practical product-name screen, not legal advice or a trademark opinion. It did not exhaust official trademark registers, national company registers, common-law rights, domains and historical ownership, package indexes, app stores, social handles, translations, or every relevant class and jurisdiction. Search absence is not proof of availability. Repeat the screen and obtain qualified trademark advice where the commercial risk warrants it.

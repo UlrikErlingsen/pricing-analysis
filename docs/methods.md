@@ -2,7 +2,7 @@
 
 ## Randomized assigned-price route
 
-For each assigned price arm, PriceSignal calculates the mean non-negative quantity or purchase outcome. It fits
+For each assigned price arm, TagSignal calculates the mean non-negative quantity or purchase outcome. It fits
 
 `log(mean quantity) = intercept + elasticity × log(price)`
 
@@ -16,7 +16,7 @@ The model is
 
 `log(quantity_t) = β0 + β1 log(price_t) + controls_t β + error_t`.
 
-`β1` is reported as a constant-elasticity association. Controls are held at their sample means for the displayed price grid. PriceSignal supports Newey–West HAC covariance with a declared lag count or HC3 covariance. It uses Duan's smearing factor, the mean of `exp(residual)`, when retranslating fitted log quantity.
+`β1` is reported as a constant-elasticity association. Controls are held at their sample means for the displayed price grid. TagSignal supports Newey–West HAC covariance with a declared lag count or HC3 covariance. It uses Duan's smearing factor, the mean of `exp(residual)`, when retranslating fitted log quantity.
 
 Coefficient draws from the robust covariance matrix propagate parameter uncertainty through volume and contribution. They do not repair a misspecified conditional mean or identify an endogenous price coefficient. The smearing factor is held fixed across coefficient draws, so its own sampling uncertainty is not propagated into the intervals.
 
@@ -38,11 +38,11 @@ For every route:
 
 `contribution(p) = projected volume(p) × (p − unit cost)`
 
-PriceSignal compares candidate and reference contribution draw by draw. The 2.5th and 97.5th percentiles form the displayed interval. No p-value controls the action status.
+TagSignal compares candidate and reference contribution draw by draw. The 2.5th and 97.5th percentiles form the displayed interval. No p-value controls the action status.
 
-The declared minimum worthwhile contribution must be above zero. With a zero threshold, MEANINGFUL UPSIDE would reduce to "the interval excludes zero" — a bare significance statement — so PriceSignal refuses to run the comparison until a positive threshold is declared. MEANINGFUL UPSIDE requires the interval lower bound to lie strictly above that threshold.
+The declared minimum worthwhile contribution must be above zero. With a zero threshold, MEANINGFUL UPSIDE would reduce to "the interval excludes zero" — a bare significance statement — so TagSignal refuses to run the comparison until a positive threshold is declared. MEANINGFUL UPSIDE requires the interval lower bound to lie strictly above that threshold.
 
-In the randomized route, bootstrap resamples in which any arm mean is non-positive cannot support the log-curve refit and are discarded; when this happens, PriceSignal reports the discard share and notes that the interval is conditioned on positive demand.
+In the randomized route, bootstrap resamples in which any arm mean is non-positive cannot support the log-curve refit and are discarded; when this happens, TagSignal reports the discard share and notes that the interval is conditioned on positive demand.
 
 ## Reproducibility
 

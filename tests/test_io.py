@@ -6,9 +6,9 @@ import zipfile
 
 import pandas as pd
 
-from pricesignal.analysis import PriceConfig, analyze_price
-from pricesignal.examples import demo_contract, randomized_demo
-from pricesignal.io import (
+from tagsignal.analysis import PriceConfig, analyze_price
+from tagsignal.examples import demo_contract, randomized_demo
+from tagsignal.io import (
     build_evidence_pack,
     build_gate_bridge,
     dataframe_to_xlsx,
@@ -47,7 +47,7 @@ def test_exports_are_aggregate_and_portable() -> None:
     )
     raw_json = evidence_to_json(pack)
     decoded = json.loads(raw_json)
-    assert decoded["schema"] == "pricesignal.evidence.v1"
+    assert decoded["schema"] == "tagsignal.evidence.v1"
     assert "customer_id" not in raw_json.decode()
     workbook = pd.ExcelFile(io.BytesIO(evidence_to_excel(pack)), engine="openpyxl")
     assert "Candidate comparison" in workbook.sheet_names

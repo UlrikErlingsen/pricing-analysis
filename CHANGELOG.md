@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 — 2026-07-17
+
+- Renamed from PriceSignal to TagSignal after the working name was found to collide with an active commercial pricing-intelligence product. No analytical changes.
+
 ## 1.0.1 — 2026-07-16
 
 ### Security

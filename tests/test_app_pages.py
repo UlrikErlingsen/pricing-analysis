@@ -10,16 +10,15 @@ def app() -> AppTest:
 def test_welcome_page_and_brand_render() -> None:
     at = app()
     assert not at.exception
-    assert any("PriceSignal" in markdown.value for markdown in at.markdown)
+    assert any("TagSignal" in markdown.value for markdown in at.markdown)
     assert any("does not turn a model into market truth" in warning.value for warning in at.warning)
-    assert any("LOCAL/PRIVATE ONLY" in warning.value for warning in at.warning)
 
 
-def test_working_name_warning_persists_across_pages() -> None:
+def test_brand_wordmark_persists_across_pages() -> None:
     at = app()
     at.radio[0].set_value("Methods & limits").run()
     assert not at.exception
-    assert any("must be renamed before it is published" in warning.value for warning in at.warning)
+    assert any("TagSignal" in markdown.value for markdown in at.markdown)
 
 
 def test_every_page_renders_with_randomized_demo() -> None:
