@@ -154,6 +154,8 @@ Fixtures cover known elasticity recovery, randomized arm behavior, empirical WTP
 - **[ExperimentSignal](https://github.com/UlrikErlingsen/experiment-analysis)** is the general randomized-experiment engine. TagSignal adds pricing-specific demand and contribution logic while retaining strict randomization caveats.
 - **[AllocSignal](https://github.com/UlrikErlingsen/marketing-mix-allocation)** allocates marketing budgets, not product prices.
 - **[GateSignal](https://github.com/UlrikErlingsen/launch-decision-gate)** can consume the aggregate TagSignal bridge as one bounded launch input.
+- **[TraceSignal](https://github.com/UlrikErlingsen/journey-path-analysis)** — descriptive customer-journey evidence from event logs: transitions, path support, drop-off, and Markov removal sensitivity, with no causal channel credit.
+- **[TrackSignal](https://github.com/UlrikErlingsen/brand-tracking)** — brand-tracking wave comparison: separate measures with intervals, multiple-comparison control, and declared practical thresholds.
 
 TagSignal shares the suite’s local-first, named-method, fictional-demo, portable-evidence, and explicit-boundary standard. The portfolio overview is at [ulrikerlingsen.com](https://ulrikerlingsen.com).
 
