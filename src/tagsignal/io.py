@@ -1,4 +1,4 @@
-"""Safe local import and privacy-minimized TagSignal exports."""
+"""Safe local import and privacy-minimized Tag Signal exports."""
 
 from __future__ import annotations
 
@@ -46,7 +46,7 @@ def read_table(raw: bytes, filename: str) -> tuple[pd.DataFrame, dict[str, str]]
     if not raw:
         raise DataProblem("The uploaded file is empty.")
     if len(raw) > MAX_UPLOAD_BYTES:
-        raise DataProblem("The uploaded file exceeds TagSignal's 50 MB local safety limit.")
+        raise DataProblem("The uploaded file exceeds Tag Signal's 50 MB local safety limit.")
     extension = Path(filename).suffix.casefold()
     if extension not in ALLOWED_EXTENSIONS:
         raise DataProblem("Use CSV, XLSX, or JSON for pricing evidence.")
@@ -129,7 +129,7 @@ def build_evidence_pack(*, source: dict[str, object], contract: dict[str, object
         "schema": "tagsignal.evidence.v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "generated_by": {
-            "product": "TagSignal",
+            "product": "Tag Signal",
             "version": __version__,
             "python": platform.python_version(),
         },
@@ -154,11 +154,11 @@ def build_evidence_pack(*, source: dict[str, object], contract: dict[str, object
 
 
 def build_gate_bridge(analysis) -> dict[str, object]:
-    """Small aggregate payload for a future GateSignal pricing-evidence import."""
+    """Small aggregate payload for a future Gate Signal pricing-evidence import."""
     comparison = analysis.comparison
     return {
         "schema": "signal.price-evidence.v1",
-        "producer": {"product": "TagSignal", "version": __version__},
+        "producer": {"product": "Tag Signal", "version": __version__},
         "evidence_tier": analysis.evidence_tier,
         "candidate_price": comparison["candidate_price"],
         "reference_price": comparison["reference_price"],
@@ -195,7 +195,7 @@ def evidence_to_excel(pack: dict[str, object]) -> bytes:
     used: set[str] = set()
     flat_sections = {
         "Read me": {
-            "product": "TagSignal",
+            "product": "Tag Signal",
             "schema": pack.get("schema"),
             "evidence_tier": pack.get("evidence_tier"),
             "privacy_note": pack.get("privacy_note"),

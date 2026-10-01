@@ -1,6 +1,8 @@
-# Working-name screen: TagSignal
+# Working-name screen: Tag Signal
 
 Screen date: **17 July 2026**
+
+> **Display name since 1.2.0:** the product is written **Tag Signal** (with a space) in the Signal brand refresh; the package, file and environment-variable names stay `tagsignal` / `TAGSIGNAL_*`. The screen below was run on the exact combined string “TagSignal” and has not been repeated for the spaced form. The refresh changes spelling only and claims no new clearance.
 
 ## Why the app was renamed
 

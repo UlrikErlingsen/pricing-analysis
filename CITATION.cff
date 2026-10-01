@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use TagSignal, please cite the software and the primary method source appropriate to your evidence route."
-title: "TagSignal: open pricing evidence and decision support"
+message: "If you use Tag Signal, please cite the software and the primary method source appropriate to your evidence route."
+title: "Tag Signal: open pricing evidence and decision support"
 type: software
 authors:
   - family-names: Erlingsen

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tagsignal"
 version = "1.1.0"
-description = "TagSignal: open, local-first pricing evidence and decision support"
+description = "Tag Signal: open, local-first pricing evidence and decision support"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "AGPL-3.0-or-later"

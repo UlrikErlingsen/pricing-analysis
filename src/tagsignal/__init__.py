@@ -1,4 +1,4 @@
-"""TagSignal public package surface."""
+"""Tag Signal public package surface."""
 
 __version__ = "1.1.0"
 

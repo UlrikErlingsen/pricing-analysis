@@ -11,7 +11,7 @@ if [ -f "$PID_FILE" ] && [ -f "$PORT_FILE" ]; then
   EXISTING_PORT="$(/bin/cat "$PORT_FILE")"
   EXISTING_URL="http://127.0.0.1:${EXISTING_PORT}"
   if /bin/kill -0 "$EXISTING_PID" 2>/dev/null && /usr/bin/curl -fsS "${EXISTING_URL}/_stcore/health" >/dev/null 2>&1; then
-    echo "TagSignal is already running. Opening it now."
+    echo "Tag Signal is already running. Opening it now."
     if [ "${TAGSIGNAL_NO_BROWSER:-0}" != "1" ]; then /usr/bin/open "$EXISTING_URL"; fi
     exit 0
   fi
@@ -19,14 +19,14 @@ if [ -f "$PID_FILE" ] && [ -f "$PORT_FILE" ]; then
 fi
 
 if ! /usr/bin/env python3 -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; then
-  echo "TagSignal needs Python 3.10 or newer."
+  echo "Tag Signal needs Python 3.10 or newer."
   echo "Install it from https://www.python.org/downloads/ and try again."
   read -r -p "Press Return to close..."
   exit 1
 fi
 
 if [ ! -d ".venv" ]; then
-  echo "Creating TagSignal's private Python environment..."
+  echo "Creating Tag Signal's private Python environment..."
   /usr/bin/env python3 -m venv .venv
 fi
 
@@ -36,12 +36,12 @@ export ARROW_DEFAULT_MEMORY_POOL="${ARROW_DEFAULT_MEMORY_POOL:-system}"
 REQUIREMENTS_HASH="$(/usr/bin/shasum -a 256 requirements.txt | /usr/bin/awk '{print $1}')"
 READY_FILE=".venv/.tagsignal-requirements-${REQUIREMENTS_HASH}"
 if [ ! -f "$READY_FILE" ]; then
-  echo "First launch: downloading TagSignal's packages. Later launches will be faster."
+  echo "First launch: downloading Tag Signal's packages. Later launches will be faster."
   python -m pip --disable-pip-version-check install --prefer-binary -r requirements.txt
   /bin/rm -f .venv/.tagsignal-requirements-* .venv/.tagsignal-ready
   /usr/bin/touch "$READY_FILE"
 else
-  echo "Using the existing TagSignal environment."
+  echo "Using the existing Tag Signal environment."
 fi
 
 if [ -n "${TAGSIGNAL_PORT:-}" ]; then
@@ -68,7 +68,7 @@ fi
 
 URL="http://127.0.0.1:${PORT}"
 MAX_UPLOAD_MB="${TAGSIGNAL_MAX_UPLOAD_MB:-50}"
-echo "Starting TagSignal at ${URL}..."
+echo "Starting Tag Signal at ${URL}..."
 python -m streamlit run app.py \
   --server.headless=true \
   --server.address=127.0.0.1 \
@@ -89,13 +89,13 @@ trap cleanup EXIT INT TERM
 ATTEMPT=1
 while [ "$ATTEMPT" -le 120 ]; do
   if /usr/bin/curl -fsS "${URL}/_stcore/health" >/dev/null 2>&1; then
-    echo "TagSignal is ready. Opening your browser..."
+    echo "Tag Signal is ready. Opening your browser..."
     if [ "${TAGSIGNAL_NO_BROWSER:-0}" != "1" ]; then /usr/bin/open "$URL"; fi
     wait "$APP_PID"
     exit $?
   fi
   if ! /bin/kill -0 "$APP_PID" 2>/dev/null; then
-    echo "TagSignal stopped before it became ready. Review the message above."
+    echo "Tag Signal stopped before it became ready. Review the message above."
     wait "$APP_PID"
     exit $?
   fi
@@ -103,6 +103,6 @@ while [ "$ATTEMPT" -le 120 ]; do
   /bin/sleep 0.25
 done
 
-echo "TagSignal took too long to start. Review the message above, then try again."
+echo "Tag Signal took too long to start. Review the message above, then try again."
 exit 1
 

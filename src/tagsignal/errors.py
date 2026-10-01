@@ -10,5 +10,5 @@ def friendly_message(exc: Exception) -> str:
         return str(exc)
     if isinstance(exc, ValueError):
         return str(exc)
-    return "TagSignal could not complete the analysis. Check the data contract and try again."
+    return "Tag Signal could not complete the analysis. Check the data contract and try again."
 
