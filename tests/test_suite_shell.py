@@ -57,6 +57,7 @@ def test_runtime_scaffolding_is_private_and_health_checked() -> None:
     launcher = (ROOT / "run_app.command").read_text(encoding="utf-8")
 
     assert "gatherUsageStats = false" in config
+    assert "maxUploadSize = 50" in config  # the original upload limit, matching the 50 MB check in io.py
     assert 'base = "light"' in config
     assert 'primaryColor = "#a06f1f"' in config  # Signal Research family, 600 step
     assert "USER tagsignal" in dockerfile
