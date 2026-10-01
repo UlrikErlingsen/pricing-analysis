@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.0 — 2026-10-02
+
+Signal brand refresh and Signal Hub entry point. The analysis, statistics, data contract, decision statuses and export schemas are unchanged.
+
+### Brand
+
+- Display name written **Tag Signal** (with a space) in the app, README, docs, launchers, export labels and metadata. Package, file, schema and environment-variable names stay `tagsignal` / `TAGSIGNAL_*`; the bridge schema stays `signal.price-evidence.v1`. The name screen still covers the exact string “TagSignal” only; no new clearance is claimed.
+- The app uses the shared `signal_theme` module (Organic Signal design, Research family colour `#a06f1f`, Figtree): sidebar lockup, masthead, hero, cards, notes, decision header, footer, Plotly template and the mark as favicon replace the pasted styles. The demand-and-economics chart keeps its meaning with theme colours (volume in the family colour, interval band in the soft neutral, contribution in ink, declared prices as dotted threshold markers).
+- New banner, social preview and marks in `assets/`; the old banner SVG is removed. `.streamlit/config.toml` uses the family colours.
+- README follows the Signal template; bug-report and feature-request issue templates added.
+
+### Signal Hub contract
+
+- `tagsignal.ui` exposes `APP_INFO` and `render()`, so Signal Hub can embed the app; `app.py` is now a thin standalone entry point.
+- All session-state and widget keys are namespaced `tag:` (including the page selector).
+- `streamlit` and `plotly` moved to a `ui` extra (also in `test`); the analysis core installs without them. `requirements.txt` still lists everything.
+- The UI reads no repository-root files (demos and starter workbooks are generated in code, marks ship as package data), so a packaged install works inside Signal Hub.
+- New tests: no Streamlit/Plotly import outside `tagsignal.ui`, `render()` runs from a script without a page config, every widget key is namespaced, no repository-root file reads, the shared shell and the README template.
+
 ## 1.1.0 — 2026-07-17
 
 - Renamed from PriceSignal to TagSignal after the working name was found to collide with an active commercial pricing-intelligence product. No analytical changes.
