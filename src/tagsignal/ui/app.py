@@ -93,22 +93,42 @@ def reset_results() -> None:
     st.session_state.pop(k("analysis"), None)
 
 
+DEMO_FRAMES = {"randomized": randomized_demo, "historical": historical_demo, "valuation": valuation_demo}
+DEMO_FILENAMES = {
+    "randomized": "tagsignal-fictional-randomized-demo.csv",
+    "historical": "tagsignal-fictional-historical-demo.csv",
+    "valuation": "tagsignal-fictional-valuation-demo.csv",
+}
+# The demo that opens on first run: the randomized test is the strongest evidence tier and walks every page.
+DEFAULT_DEMO = "randomized"
+
+
 def load_demo(mode: str) -> None:
-    frames = {"randomized": randomized_demo, "historical": historical_demo, "valuation": valuation_demo}
-    names = {
-        "randomized": "tagsignal-fictional-randomized-demo.csv",
-        "historical": "tagsignal-fictional-historical-demo.csv",
-        "valuation": "tagsignal-fictional-valuation-demo.csv",
-    }
-    st.session_state[k("data")] = frames[mode]()
+    st.session_state[k("data")] = DEMO_FRAMES[mode]()
     st.session_state[k("source")] = {
-        "source_filename": names[mode],
+        "source_filename": DEMO_FILENAMES[mode],
         "source_sheet": "",
         "source_sha256": hashlib.sha256(f"tagsignal-{mode}-fictional-v1".encode()).hexdigest(),
         "source_type": "deterministic synthetic demonstration",
     }
     st.session_state[k("contract")] = demo_contract(mode)
     reset_results()
+
+
+@st.cache_data(show_spinner=False)
+def _demo_analysis(mode: str):
+    """The fictional demo analysed with its own saved contract (deterministic, so cached across sessions)."""
+    return analyze_price(DEMO_FRAMES[mode](), config_from_contract(demo_contract(mode)))
+
+
+def _ensure_state() -> None:
+    """Open with the default fictional demo already loaded and analysed when nothing is in session state.
+
+    An upload or a demo button replaces it; this only runs while the session holds no data at all.
+    """
+    if k("data") not in st.session_state:
+        load_demo(DEFAULT_DEMO)
+        st.session_state[k("analysis")] = _demo_analysis(DEFAULT_DEMO)
 
 
 def config_from_contract(contract: dict[str, object]) -> PriceConfig:
@@ -183,7 +203,18 @@ def page_welcome() -> None:
             ),
         ]
     )
-    st.subheader("Start with fictional evidence")
+    st.subheader("Fictional evidence is already loaded")
+    st.markdown(
+        "Tag Signal opens with a **fictional randomized price test** already loaded and analysed, so every page "
+        "shows results straight away. All demo records, prices, and outcomes are invented. The buttons below switch "
+        "to another fictional route or restore this one with its saved contract (then run the analysis on page 2); "
+        "uploading your own table from the sidebar replaces the demo."
+    )
+    source = st.session_state.get(k("source"), {})
+    if source.get("source_type") == "deterministic synthetic demonstration":
+        st.caption(f"Currently loaded: fictional demo `{source.get('source_filename', '')}`.")
+    else:
+        st.caption(f"Currently loaded: your upload `{source.get('source_filename', '')}`.")
     left, middle, right = st.columns(3)
     with left:
         st.button(
@@ -661,6 +692,7 @@ def _sidebar() -> str:
 def render() -> None:
     """Draw the whole Tag Signal app on the current page. Never calls st.set_page_config or st.navigation."""
     sig.apply(NS)
+    _ensure_state()
     page = _sidebar()
     sig.masthead(NS, MASTHEAD_PROMISES, MASTHEAD_KICKER)
     try:

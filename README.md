@@ -43,13 +43,13 @@ The highest modeled contribution is a bounded scenario over the evidence rangeâ€
 
 ## Try the demo in three minutes
 
-1. Start the app and click **Load randomized price test**.
-2. Review the saved contract: four assigned prices, a reference price, candidate price, unit cost, market opportunities, and a minimum worthwhile contribution.
-3. Open **Data & support audit** and run the pricing analysis.
-4. Inspect arm support, elasticity, the bounded volume and contribution curves, and all warnings.
+1. Start the app. It opens with the **fictional randomized price test** already loaded and analysed, so every page shows results without an upload.
+2. Review the saved contract on **Evidence contract**: four assigned prices, a reference price, candidate price, unit cost, market opportunities, and a minimum worthwhile contribution.
+3. Open **Data & support audit** to see the support table; re-run the pricing analysis there after changing the contract.
+4. Inspect arm support, elasticity, the bounded volume and contribution curves, and all warnings on **Demand & economics**.
 5. Open **Decision & export** to compare the declared prices and download the privacy-minimized evidence pack as JSON, XLSX, or CSV-ZIP.
 
-All bundled records, products, prices, respondents, and outcomes are fictional and deterministic. They represent no real respondent, organisation, course case or empirical finding. The historical series and stated-WTP sample load the same way.
+All bundled records, products, prices, respondents, and outcomes are fictional and deterministic. They represent no real respondent, organisation, course case or empirical finding. The **Welcome** buttons switch to the fictional historical series or stated-WTP sample, or restore the randomized test; uploading your own table from the sidebar replaces the demo.
 
 ## Data contract
 

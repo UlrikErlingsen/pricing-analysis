@@ -10,6 +10,11 @@ Signal brand refresh and Signal Hub entry point. The analysis, statistics, data 
 - The app uses the shared `signal_theme` module (Organic Signal design, Research family colour `#a06f1f`, Figtree): sidebar lockup, masthead, hero, cards, notes, decision header, footer, Plotly template and the mark as favicon replace the pasted styles. The demand-and-economics chart keeps its meaning with theme colours (volume in the family colour, interval band in the soft neutral, contribution in ink, declared prices as dotted threshold markers).
 - New banner, social preview and marks in `assets/`; the old banner SVG is removed. `.streamlit/config.toml` uses the family colours.
 - README follows the Signal template; bug-report and feature-request issue templates added.
+- Embedded Figtree font, no Google Fonts request: the re-synced theme loads Figtree from the bundled `signal_font.py`, and the chart colorway follows the per-family contrast order.
+
+### First run
+
+- Opens with the fictional demo preloaded: on first run the randomized price test is loaded with its saved contract and already analysed, so every page shows results without an upload. The demo buttons still switch or restore routes, and an upload replaces the demo.
 
 ### Signal Hub contract
 
