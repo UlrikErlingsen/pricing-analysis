@@ -1,6 +1,6 @@
 # Data guide
 
-Tag Signal accepts CSV, XLSX, or JSON. A JSON file must be an array of row objects or an object with a `data` array. The first Excel worksheet is read. The local upload limit is 50 MB, 250,000 rows, and 500 columns.
+Tag Signal accepts CSV, XLSX, or JSON. A JSON file must be an array of row objects or an object with a `data` array. The first Excel worksheet is read. Run locally there is no built-in limit on file size, rows, or columns (memory is the limit; Streamlit's upload cap is `TAGSIGNAL_MAX_UPLOAD_MB`, default 10,000 MB). A public online demo (`SIGNAL_PUBLIC=1`) limits uploads to 50 MB, 250,000 rows, and 500 columns.
 
 ## Shared rules
 

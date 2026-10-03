@@ -30,7 +30,8 @@ def result():
 def test_csv_json_and_xlsx_imports() -> None:
     frame = pd.DataFrame({"price": [10, 12], "quantity": [5, 4]})
     csv_frame, csv_source = read_table(frame.to_csv(index=False).encode(), "input.csv")
-    assert csv_frame.equals(frame)
+    # CSV values are stored in the smallest lossless dtype (here int8); the values are unchanged.
+    pd.testing.assert_frame_equal(csv_frame, frame, check_dtype=False)
     assert csv_source["source_sha256"]
     json_frame, _ = read_table(json.dumps({"data": frame.to_dict(orient="records")}).encode(), "input.json")
     assert json_frame.equals(frame)

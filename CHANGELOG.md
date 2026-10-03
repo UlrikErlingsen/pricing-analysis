@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0 — 2026-10-03
+
+### Larger datasets
+
+- Larger datasets: run locally, Tag Signal has no built-in limit on file size, rows or columns (was 50 MB, 250,000 rows and 500 columns); memory is the limit, and running out of memory gives a plain message. A public demo (`SIGNAL_PUBLIC=1`) keeps those values as demo limits, all in the new `tagsignal.limits` module, with messages that say the downloaded app has none.
+- CSV is read in 250,000-row chunks and numbers are stored in the smallest lossless type (unit counts in one byte); the analysis converts every declared column to double precision. Uploaded frames are no longer copied once more after reading.
+- Above 100,000 rows the bootstraps resample counts instead of rows, with exactly the same distributions: randomized arm means from multinomial counts over distinct outcome values, WTP acceptance curves from multinomial counts between grid prices, and WTP quantile uncertainty from the exact Beta distribution of resampled order statistics. The diagnostics record the method (`bootstrap_method`). At 5,000,000 rows each route takes about one to two seconds; the previous WTP bootstrap needed about 6 seconds for 250,000 rows. Smaller data keep the previous resampling and identical results.
+- The app keeps the audit for the current data and contract instead of recomputing it on every rerun, and no longer re-reads and re-hashes an unchanged upload on each rerun; the analysis shows a progress spinner.
+- Launchers default `TAGSIGNAL_MAX_UPLOAD_MB` to 10000 (the Windows launcher now honours it and `TAGSIGNAL_PORT`), and the Docker image sets `STREAMLIT_SERVER_MAX_UPLOAD_SIZE=10000`. Signal Hub mode (`SIGNAL_HUB=1`) is unchanged.
+
+### Suite
+
+- Suite: Rival, Reach, Learn and Blueprint Signal added to the suite table (README) and to the theme copy's app list; `.streamlit/config.toml` carries Signal Hub's 10,000 MB upload cap.
+
 ## 1.2.0 — 2026-10-02
 
 Signal brand refresh and Signal Hub entry point. The analysis, statistics, data contract, decision statuses and export schemas are unchanged.

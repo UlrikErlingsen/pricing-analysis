@@ -14,6 +14,13 @@ from .errors import DataProblem
 
 SUPPORTED_MODES = {"historical", "randomized", "valuation"}
 
+# Above this many rows, the bootstrap resamples counts instead of rows: a resample's arm mean (randomized) and its
+# acceptance curve (valuation) depend only on how many draws fall on each distinct value or between neighbouring grid
+# prices, and those counts are exactly multinomial. WTP quantiles are drawn from the exact Beta distribution of the
+# resampled order statistics. Same distributions as resampling millions of rows, at a cost independent of n.
+LARGE_SAMPLE_ROWS = 100_000
+MAX_MULTINOMIAL_CATEGORIES = 100_000
+
 ZERO_THRESHOLD_REFUSAL = (
     "Set the minimum worthwhile incremental contribution above zero — with zero, the reading collapses into a "
     "bare significance statement, which Tag Signal refuses to present as a decision."
@@ -99,7 +106,8 @@ def _analysis_frame(frame: pd.DataFrame, config: PriceConfig) -> pd.DataFrame:
         raise DataProblem("Each analytical role must use a different column.")
     data = pd.DataFrame(index=frame.index)
     for column in columns:
-        data[column] = _numeric(frame, column)
+        # Float64 for every calculation, whatever compact dtype the upload was stored in.
+        data[column] = _numeric(frame, column).astype(float)
     return data
 
 
@@ -460,6 +468,15 @@ def _analyze_historical(frame: pd.DataFrame, config: PriceConfig, audit: AuditRe
     )
 
 
+def _arm_mean_sampler(values: np.ndarray, rng: np.random.Generator, large: bool):
+    """Return a function drawing one bootstrap mean of ``values`` (resampled with replacement)."""
+    distinct, counts = np.unique(values, return_counts=True)
+    if large and len(distinct) <= MAX_MULTINOMIAL_CATEGORIES:
+        shares = counts / len(values)
+        return lambda: float(rng.multinomial(len(values), shares) @ distinct) / len(values)
+    return lambda: float(np.mean(rng.choice(values, size=len(values), replace=True)))
+
+
 def _analyze_randomized(frame: pd.DataFrame, config: PriceConfig, audit: AuditResult) -> PriceAnalysis:
     data = _analysis_frame(frame, config).dropna()
     data = data.loc[(data[config.price_col] > 0) & (data[config.quantity_col] >= 0)].copy()  # type: ignore[index]
@@ -476,15 +493,16 @@ def _analyze_randomized(frame: pd.DataFrame, config: PriceConfig, audit: AuditRe
     if binary_like:
         quantity_point = np.clip(quantity_point, 0, 1)
     rng = np.random.default_rng(config.seed)
+    large = len(data) > LARGE_SAMPLE_ROWS
+    samplers = [
+        _arm_mean_sampler(group[config.quantity_col].to_numpy(dtype=float), rng, large)  # type: ignore[index]
+        for group in grouped
+    ]
     bootstrap_betas: list[np.ndarray] = []
     attempts = 0
     while len(bootstrap_betas) < config.bootstrap_iterations and attempts < config.bootstrap_iterations * 4:
         attempts += 1
-        sampled_means = []
-        for group in grouped:
-            values = group[config.quantity_col].to_numpy(dtype=float)  # type: ignore[index]
-            sampled_means.append(float(np.mean(rng.choice(values, size=len(values), replace=True))))
-        sampled = np.asarray(sampled_means)
+        sampled = np.asarray([sampler() for sampler in samplers])
         if np.all(sampled > 0):
             bootstrap_betas.append(_weighted_log_curve(arm_prices, sampled, arm_n))
     if len(bootstrap_betas) < 100:
@@ -529,6 +547,11 @@ def _analyze_randomized(frame: pd.DataFrame, config: PriceConfig, audit: AuditRe
         "elasticity_low": float(np.quantile(elasticity_draws, 0.025)),
         "elasticity_high": float(np.quantile(elasticity_draws, 0.975)),
         "bootstrap_draws": int(len(beta_draws)),
+        "bootstrap_method": (
+            "Within-arm resampling as exact multinomial counts over distinct outcome values"
+            if large
+            else "Within-arm resampling of units"
+        ),
         "binary_purchase_outcome": binary_like,
         "functional_form": "Power curve fitted to assigned-price arm means",
     }
@@ -552,6 +575,45 @@ def _acceptance(values: np.ndarray, prices: np.ndarray) -> np.ndarray:
     return (len(ordered) - first_acceptable) / len(ordered)
 
 
+def _acceptance_draws_from_counts(
+    values: np.ndarray, prices: np.ndarray, draws: int, rng: np.random.Generator
+) -> np.ndarray:
+    """Bootstrap acceptance curves from multinomial counts between grid prices (exactly like resampling values)."""
+    order = np.argsort(prices)
+    sorted_prices = prices[order]
+    # A value is at or above the j-th sorted price exactly when more than j sorted prices are at or below it.
+    bins = np.searchsorted(sorted_prices, values, side="right")
+    counts = np.bincount(bins, minlength=len(prices) + 1)
+    resampled = rng.multinomial(len(values), counts / len(values), size=draws)
+    at_or_above = np.cumsum(resampled[:, ::-1], axis=1)[:, ::-1][:, 1:]
+    result = np.empty((draws, len(prices)))
+    result[:, order] = at_or_above / len(values)
+    return result
+
+
+def _bootstrap_quantile_draws(
+    sorted_values: np.ndarray, level: float, draws: int, rng: np.random.Generator
+) -> np.ndarray:
+    """Draws of ``np.quantile(resample, level)`` from the exact distribution of resampled order statistics.
+
+    The (i+1)-th smallest of n uniforms is Beta(i+1, n-i); the next one adds (1 - u)·Beta(1, n-i-1). Mapping them
+    through the empirical inverse CDF gives the two order statistics np.quantile interpolates between.
+    """
+    n = len(sorted_values)
+    position = (n - 1) * level
+    lower = int(np.floor(position))
+    fraction = position - lower
+    first = rng.beta(lower + 1, n - lower, size=draws)
+    second = first + (1.0 - first) * (rng.beta(1, n - lower - 1, size=draws) if lower + 1 < n else 0.0)
+
+    def inverse(uniform: np.ndarray) -> np.ndarray:
+        index = np.clip(np.ceil(uniform * n).astype(np.int64) - 1, 0, n - 1)
+        return sorted_values[index]
+
+    low_value = inverse(first)
+    return low_value + fraction * (inverse(second) - low_value)
+
+
 def _analyze_valuation(frame: pd.DataFrame, config: PriceConfig, audit: AuditResult) -> PriceAnalysis:
     data = _analysis_frame(frame, config).dropna()
     values = data.loc[data[config.wtp_col] > 0, config.wtp_col].to_numpy(dtype=float)  # type: ignore[index]
@@ -561,27 +623,38 @@ def _analyze_valuation(frame: pd.DataFrame, config: PriceConfig, audit: AuditRes
     prices = _price_grid(lower, support_max, config, points=101)
     quantity_point = _acceptance(values, prices)
     rng = np.random.default_rng(config.seed)
-    quantity_draws = np.empty((config.bootstrap_iterations, len(prices)), dtype=float)
-    for index in range(config.bootstrap_iterations):
-        sample = rng.choice(values, size=len(values), replace=True)
-        quantity_draws[index] = _acceptance(sample, prices)
+    large = len(values) > LARGE_SAMPLE_ROWS
+    if large:
+        quantity_draws = _acceptance_draws_from_counts(values, prices, config.bootstrap_iterations, rng)
+    else:
+        quantity_draws = np.empty((config.bootstrap_iterations, len(prices)), dtype=float)
+        for index in range(config.bootstrap_iterations):
+            sample = rng.choice(values, size=len(values), replace=True)
+            quantity_draws[index] = _acceptance(sample, prices)
     grid, contribution_draws = _summarize_grid(prices, quantity_point, quantity_draws, config)
     comparison, optimal = _comparison_and_optimum(
         grid, contribution_draws, config, support_min=support_min, support_max=support_max
     )
     quantile_levels = np.array([0.05, 0.25, 0.5, 0.75, 0.95])
     quantiles = np.quantile(values, quantile_levels)
+    if large:
+        sorted_values = np.sort(values)
+        quantile_se = [
+            float(np.std(_bootstrap_quantile_draws(sorted_values, level, 200, rng), ddof=1)) for level in quantile_levels
+        ]
+    else:
+        quantile_se = [
+            np.std(
+                [np.quantile(rng.choice(values, size=len(values), replace=True), level) for _ in range(200)],
+                ddof=1,
+            )
+            for level in quantile_levels
+        ]
     coefficients = pd.DataFrame(
         {
             "term": [f"WTP {level:.0%}" for level in quantile_levels],
             "estimate": quantiles,
-            "bootstrap_se": [
-                np.std(
-                    [np.quantile(rng.choice(values, size=len(values), replace=True), level) for _ in range(200)],
-                    ddof=1,
-                )
-                for level in quantile_levels
-            ],
+            "bootstrap_se": quantile_se,
         }
     )
     warnings = list(audit.warnings)
@@ -595,6 +668,11 @@ def _analyze_valuation(frame: pd.DataFrame, config: PriceConfig, audit: AuditRes
         "mean_wtp": float(np.mean(values)),
         "valuation_method": config.valuation_method,
         "bootstrap_draws": config.bootstrap_iterations,
+        "bootstrap_method": (
+            "Exact multinomial counts between grid prices; WTP quantiles from exact order-statistic draws"
+            if large
+            else "Resampling of respondents"
+        ),
         "demand_interpretation": "Empirical share with WTP at or above price; not observed market conversion",
     }
     return PriceAnalysis(

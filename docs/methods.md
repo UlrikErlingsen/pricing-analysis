@@ -6,7 +6,7 @@ For each assigned price arm, Tag Signal calculates the mean non-negative quantit
 
 `log(mean quantity) = intercept + elasticity × log(price)`
 
-using arm counts as weights. The fitted slope is a constant price elasticity. Uncertainty comes from resampling units with replacement **within each assigned arm**, recomputing arm means, and refitting the curve. This preserves the realized arm sizes.
+using arm counts as weights. The fitted slope is a constant price elasticity. Uncertainty comes from resampling units with replacement **within each assigned arm**, recomputing arm means, and refitting the curve. This preserves the realized arm sizes. Above 100,000 rows the resampled arm mean is drawn from multinomial counts over the arm's distinct outcome values, which has exactly the distribution of resampling the units themselves.
 
 With two arms the slope is identified, but curvature cannot be checked. With several arms the power curve remains a restriction. The app clips fitted values to `[0, 1]` when the observed outcome is binary.
 
@@ -26,7 +26,7 @@ For a price `p`, empirical acceptance is
 
 `A(p) = count(WTP_i ≥ p) / n`.
 
-Respondents are bootstrapped with replacement. This creates an uncertainty distribution for acceptance, projected volume, contribution, and the price with the highest modeled contribution over the displayed grid.
+Respondents are bootstrapped with replacement. Above 100,000 respondents the resampled acceptance curve is drawn from multinomial counts between neighbouring grid prices, and resampled WTP quantiles from the exact Beta distribution of the order statistics they interpolate; both have exactly the bootstrap distribution of resampling respondents. This creates an uncertainty distribution for acceptance, projected volume, contribution, and the price with the highest modeled contribution over the displayed grid.
 
 This is a valuation scenario. It equates a respondent's declared reservation price with acceptance under the study context, which is not the same as observed purchase in a market.
 

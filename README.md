@@ -30,7 +30,7 @@ The highest modeled contribution is a bounded scenario over the evidence range�
 
 ## Scope
 
-**Version 1.2 supports:**
+**Version 1.3 supports:**
 
 - a randomized assigned-price test: one row per assigned unit, binary purchase or quantity outcomes, power-curve fit to arm means, stratified within-arm bootstrap;
 - a historical price–quantity series: one row per period, numeric controls, log–log demand association with Newey–West HAC or HC3 covariance and smearing retransformation;
@@ -53,7 +53,7 @@ All bundled records, products, prices, respondents, and outcomes are fictional a
 
 ## Data contract
 
-CSV, XLSX, and JSON are accepted (a JSON file is an array of row objects or an object with a `data` array; the first Excel worksheet is read). Uploads are limited to 50 MB, 250,000 rows, and 500 columns. Use one observation per analytical unit; prices, quantities, controls, and WTP must be numeric, and prices and WTP strictly positive. Rows incomplete on any declared analytical column are omitted, and more than 25% incomplete rows block analysis.
+CSV, XLSX, and JSON are accepted (a JSON file is an array of row objects or an object with a `data` array; the first Excel worksheet is read). See [Data limits](#data-limits) for file sizes. Use one observation per analytical unit; prices, quantities, controls, and WTP must be numeric, and prices and WTP strictly positive. Rows incomplete on any declared analytical column are omitted, and more than 25% incomplete rows block analysis.
 
 Randomized price test:
 
@@ -157,7 +157,7 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-The macOS launcher prefers local port `8588` and falls back to a free port between 8501 and 8599; it accepts the `TAGSIGNAL_PORT`, `TAGSIGNAL_MAX_UPLOAD_MB`, and `TAGSIGNAL_NO_BROWSER` environment variables. The Windows launcher always uses port `8588`. Setting `TAGSIGNAL_DEBUG=1` shows technical error details inside the app on any platform.
+The macOS launcher prefers local port `8588` and falls back to a free port between 8501 and 8599; it accepts the `TAGSIGNAL_PORT`, `TAGSIGNAL_MAX_UPLOAD_MB`, and `TAGSIGNAL_NO_BROWSER` environment variables. The Windows launcher uses port `8588` (or `TAGSIGNAL_PORT`) and also accepts `TAGSIGNAL_MAX_UPLOAD_MB`, Streamlit's upload cap in MB (default 10000 on both platforms). Setting `TAGSIGNAL_DEBUG=1` shows technical error details inside the app on any platform.
 
 ### Docker
 
@@ -166,7 +166,15 @@ docker build -t tagsignal .
 docker run --rm -p 8588:8588 tagsignal
 ```
 
-Then open http://127.0.0.1:8588. The container runs as a non-root user and includes a health check.
+Then open http://127.0.0.1:8588. The container runs as a non-root user and includes a health check. Its upload cap is `STREAMLIT_SERVER_MAX_UPLOAD_SIZE` (MB, default 10000). For a public demo, also set `SIGNAL_PUBLIC=1` to apply the demo limits, e.g. `docker run -e SIGNAL_PUBLIC=1 -e STREAMLIT_SERVER_MAX_UPLOAD_SIZE=50 ...`.
+
+## Data limits
+
+Run locally (standalone, inside a local Signal Hub, or on an internal company server), Tag Signal has **no built-in limit** on file size, rows, or columns: the computer's memory is the limit, and running out of memory produces a plain message instead of a crash. Streamlit's upload cap defaults to 10,000 MB (`TAGSIGNAL_MAX_UPLOAD_MB`; `STREAMLIT_SERVER_MAX_UPLOAD_SIZE` in Docker). CSV is the fastest format; whole-number counts are stored compactly while every calculation runs in double precision.
+
+Every row enters every estimate. Above 100,000 rows the bootstraps resample counts instead of rows, with exactly the same distributions: a randomized arm's resampled mean comes from multinomial counts over its distinct outcome values, a WTP acceptance curve from multinomial counts between neighbouring grid prices, and WTP quantile uncertainty from the exact Beta distribution of resampled order statistics. The diagnostics record the method (`bootstrap_method`). On the development laptop a 5,000,000-row, 184 MB CSV loaded in about 2 seconds; the randomized and WTP routes (500 draws) then took under a second each and the historical HAC model about 2 seconds, at under 2 GB peak memory.
+
+A public online demo (`SIGNAL_PUBLIC=1`, set by Signal Hub's public image) applies demo limits instead: 50 MB uploads, 250,000 rows, and 500 columns. The downloaded app has none of them.
 
 ## Privacy
 

@@ -399,7 +399,14 @@ def page_audit() -> None:
         return
     try:
         config = config_from_contract(contract)
-        audit = audit_price_data(data, config)
+        # The audit reads every row; reuse it for the same data and contract instead of repeating it on each rerun.
+        signature = (id(data), data.shape, repr(sorted(contract.items())))
+        cached = st.session_state.get(k("audit_cache"))
+        if cached and cached[0] == signature:
+            audit = cached[1]
+        else:
+            audit = audit_price_data(data, config)
+            st.session_state[k("audit_cache")] = (signature, audit)
         st.session_state[k("audit")] = audit
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Rows received", f"{audit.summary.get('rows_received', 0):,}")
@@ -416,7 +423,8 @@ def page_audit() -> None:
         with st.expander("Preview the local input table"):
             full_width(st.dataframe, data.head(25), hide_index=True)
         if st.button("Run pricing analysis", type="primary", key=k("run_analysis"), disabled=bool(audit.blockers)):
-            analysis = analyze_price(data, config)
+            with st.spinner("Estimating the demand curve and its uncertainty draws…"):
+                analysis = analyze_price(data, config)
             st.session_state[k("analysis")] = analysis
             st.success("Analysis complete. Continue to demand and economics.")
     except Exception as exc:
@@ -652,11 +660,17 @@ PAGES = {
 
 
 def _handle_upload(upload) -> None:
-    fingerprint = hashlib.sha256(upload.getvalue()).hexdigest()
+    # The uploader keeps its file across reruns; skip re-reading and re-hashing a large unchanged file each time.
+    token = (getattr(upload, "file_id", None), upload.name, getattr(upload, "size", None))
+    if token[0] is not None and token == st.session_state.get(k("upload_token")):
+        return
+    raw = upload.getvalue()
+    fingerprint = hashlib.sha256(raw).hexdigest()
+    st.session_state[k("upload_token")] = token
     if st.session_state.get(k("uploaded_sha256")) == fingerprint:
         return
     try:
-        data, source = read_table(upload.getvalue(), upload.name)
+        data, source = read_table(raw, upload.name)
         st.session_state[k("data")] = data
         st.session_state[k("source")] = source
         st.session_state[k("uploaded_sha256")] = fingerprint
